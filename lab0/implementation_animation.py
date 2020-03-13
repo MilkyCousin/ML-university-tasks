@@ -57,6 +57,27 @@ def pictures_hist(m=0, s=1, n_l=4, n_u=2000, n_s=4):
         z = np.hstack((z, nr.standard_cauchy(n_s)))
 
 
+def pictures_scatter_normal(b1=1, b2=3, m=0, s=1, n_l=4, n_u=2000, n_s=4, pl=(16, 12), c_s=5):
+
+    n_steps = (n_u - n_l) // n_s
+
+    x = nr.normal(m, s, n_l)
+
+    for j in range(n_steps):
+        m1, m2 = abs(x) > b1, abs(x) > b2
+        m3 = m1 & ~m2
+        m4 = ~m1
+        plt.figure(figsize=pl)
+        plt.scatter(np.nonzero(m4)[0], x[m4], color='green', s=c_s)
+        plt.scatter(np.nonzero(m3)[0], x[m3], color='blue', s=c_s)
+        plt.scatter(np.nonzero(m2)[0], x[m2], color='red', s=c_s)
+        plt.title('N(%.2f, %.2f) - scatterplot' % (mu, sigma))
+        plt.savefig('./colored_dots_animated/scatter_%i.png' % j)
+        plt.close()
+
+        x = np.hstack((x, nr.normal(m, s, n_s)))
+
+
 if __name__ == '__main__':
 
-    pictures_e_cdf()
+    pictures_scatter_normal()
